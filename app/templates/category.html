@@ -1,0 +1,237 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container py-4">
+    <!-- Migas de pan -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.home') }}">Inicio</a></li>
+            {% if category.parent %}
+                <li class="breadcrumb-item"><a href="{{ url_for('products.category', category_id=category.parent.id) }}">{{ category.parent.name }}</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+        </ol>
+    </nav>
+    
+    <!-- Encabezado de la categoru00eda -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="bg-light p-4 rounded">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        {% if category.image %}
+                            <img src="{{ url_for('static', filename='images/categories/' + category.image) }}" class="img-fluid" alt="{{ category.name }}" style="max-height: 100px;">
+                        {% else %}
+                            <i class="fas fa-box fa-4x text-primary"></i>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-10">
+                        <h1 class="mb-2">{{ category.name }}</h1>
+                        {% if category.description %}
+                            <p class="mb-0">{{ category.description }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Subcategoru00edas si existen -->
+    {% if subcategories %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <h3 class="mb-3">Subcategoru00edas</h3>
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-4">
+                    {% for subcategory in subcategories %}
+                        <div class="col">
+                            <a href="{{ url_for('products.category', category_id=subcategory.id) }}" class="text-decoration-none">
+                                <div class="card h-100 text-center category-card">
+                                    <div class="card-body">
+                                        {% if subcategory.image %}
+                                            <img src="{{ url_for('static', filename='images/categories/' + subcategory.image) }}" class="img-fluid mb-3" alt="{{ subcategory.name }}" style="max-height: 60px;">
+                                        {% else %}
+                                            <i class="fas fa-box fa-2x text-primary mb-3"></i>
+                                        {% endif %}
+                                        <h5 class="card-title">{{ subcategory.name }}</h5>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Filtros y ordenamiento -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <p class="mb-md-0">Mostrando {{ products.items|length }} de {{ products.total }} productos</p>
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-md-end">
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Ordenar por
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                                    <li><a class="dropdown-item" href="#">Relevancia</a></li>
+                                    <li><a class="dropdown-item" href="#">Precio: menor a mayor</a></li>
+                                    <li><a class="dropdown-item" href="#">Precio: mayor a menor</a></li>
+                                    <li><a class="dropdown-item" href="#">Mu00e1s recientes</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Lista de productos -->
+    <div class="row">
+        <!-- Filtros laterales (solo en pantallas medianas y grandes) -->
+        <div class="col-lg-3 d-none d-lg-block">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Filtros</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Filtro por precio -->
+                    <h6 class="mb-3">Precio</h6>
+                    <div class="mb-3">
+                        <label for="priceRange" class="form-label">Rango de precio</label>
+                        <input type="range" class="form-range" min="0" max="20000" step="500" id="priceRange">
+                        <div class="d-flex justify-content-between">
+                            <span>$0</span>
+                            <span>$20,000</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Filtro por marca -->
+                    <h6 class="mb-3 mt-4">Marca</h6>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="brand1">
+                            <label class="form-check-label" for="brand1">Marca 1</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="brand2">
+                            <label class="form-check-label" for="brand2">Marca 2</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="brand3">
+                            <label class="form-check-label" for="brand3">Marca 3</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Filtro por disponibilidad -->
+                    <h6 class="mb-3 mt-4">Disponibilidad</h6>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="inStock">
+                            <label class="form-check-label" for="inStock">En stock</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="onSale">
+                            <label class="form-check-label" for="onSale">En oferta</label>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary w-100 mt-3">Aplicar filtros</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Productos -->
+        <div class="col-lg-9">
+            {% if products.items %}
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    {% for product in products.items %}
+                        <div class="col">
+                            <div class="card h-100 product-card">
+                                {% if product.is_on_sale() %}
+                                    <div class="badge bg-danger position-absolute top-0 end-0 m-2">-{{ product.discount_percentage() }}%</div>
+                                {% endif %}
+                                <a href="{{ url_for('products.product_detail', product_id=product.id) }}">
+                                    <img src="{{ url_for('static', filename='images/products/' + product.image_file) }}" class="card-img-top" alt="{{ product.name }}">
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ product.name }}</h5>
+                                    <p class="card-text small text-muted">{{ product.brand }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            {% if product.is_on_sale() %}
+                                                <span class="text-muted text-decoration-line-through">${{ "%.2f"|format(product.price) }}</span>
+                                                <span class="text-danger fw-bold ms-2">${{ "%.2f"|format(product.sale_price) }}</span>
+                                            {% else %}
+                                                <span class="fw-bold">${{ "%.2f"|format(product.price) }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <a href="{{ url_for('products.product_detail', product_id=product.id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> Ver
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Paginaciu00f3n -->
+                {% if products.pages > 1 %}
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {% if products.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('products.category', category_id=category.id, page=products.prev_num) }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for page_num in products.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                                {% if page_num %}
+                                    {% if products.page == page_num %}
+                                        <li class="page-item active"><a class="page-link" href="{{ url_for('products.category', category_id=category.id, page=page_num) }}">{{ page_num }}</a></li>
+                                    {% else %}
+                                        <li class="page-item"><a class="page-link" href="{{ url_for('products.category', category_id=category.id, page=page_num) }}">{{ page_num }}</a></li>
+                                    {% endif %}
+                                {% else %}
+                                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if products.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('products.category', category_id=category.id, page=products.next_num) }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-info">
+                    No hay productos disponibles en esta categoru00eda.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

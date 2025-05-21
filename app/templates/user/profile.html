@@ -1,0 +1,258 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Menú lateral -->
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Mi cuenta</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('user.profile') }}" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-user me-2"></i>Perfil
+                    </a>
+                    <a href="{{ url_for('user.orders') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-shopping-cart me-2"></i>Mis pedidos
+                    </a>
+                    <a href="{{ url_for('user.addresses') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-map-marker-alt me-2"></i>Direcciones
+                    </a>
+                    <a href="{{ url_for('user.wishlist') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-heart me-2"></i>Lista de deseos
+                    </a>
+                    <a href="{{ url_for('auth.logout') }}" class="list-group-item list-group-item-action text-danger">
+                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contenido principal -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Información personal</h5>
+                </div>
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    
+                    <form method="POST" action="{{ url_for('user.profile') }}">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.username.label(class="form-label") }}
+                                    {% if form.username.errors %}
+                                        {{ form.username(class="form-control is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.username.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.username(class="form-control") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.email.label(class="form-label") }}
+                                    {% if form.email.errors %}
+                                        {{ form.email(class="form-control is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.email.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.email(class="form-control") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.first_name.label(class="form-label") }}
+                                    {% if form.first_name.errors %}
+                                        {{ form.first_name(class="form-control is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.first_name.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.first_name(class="form-control") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.last_name.label(class="form-label") }}
+                                    {% if form.last_name.errors %}
+                                        {{ form.last_name(class="form-control is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.last_name.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.last_name(class="form-control") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.phone.label(class="form-label") }}
+                                    {% if form.phone.errors %}
+                                        {{ form.phone(class="form-control is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.phone.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.phone(class="form-control") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.birthdate.label(class="form-label") }}
+                                    {% if form.birthdate.errors %}
+                                        {{ form.birthdate(class="form-control is-invalid", type="date") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.birthdate.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.birthdate(class="form-control", type="date") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Guardar cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Cambiar contraseña -->
+            <div class="card mt-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Cambiar contraseña</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('user.change_password') }}">
+                        {{ password_form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ password_form.current_password.label(class="form-label") }}
+                            {% if password_form.current_password.errors %}
+                                {{ password_form.current_password(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in password_form.current_password.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ password_form.current_password(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ password_form.new_password.label(class="form-label") }}
+                            {% if password_form.new_password.errors %}
+                                {{ password_form.new_password(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in password_form.new_password.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ password_form.new_password(class="form-control") }}
+                            {% endif %}
+                            <div class="form-text">La contraseña debe tener al menos 8 caracteres y contener letras, números y caracteres especiales.</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ password_form.confirm_password.label(class="form-label") }}
+                            {% if password_form.confirm_password.errors %}
+                                {{ password_form.confirm_password(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in password_form.confirm_password.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ password_form.confirm_password(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-key me-2"></i>Cambiar contraseña
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Preferencias de notificaciones -->
+            <div class="card mt-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Preferencias de notificaciones</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('user.notification_preferences') }}">
+                        {{ notification_form.hidden_tag() }}
+                        
+                        <div class="form-check form-switch mb-3">
+                            {{ notification_form.email_offers(class="form-check-input") }}
+                            {{ notification_form.email_offers.label(class="form-check-label") }}
+                            <div class="form-text">Recibe ofertas y promociones exclusivas por correo electrónico.</div>
+                        </div>
+                        
+                        <div class="form-check form-switch mb-3">
+                            {{ notification_form.email_order_updates(class="form-check-input") }}
+                            {{ notification_form.email_order_updates.label(class="form-check-label") }}
+                            <div class="form-text">Recibe actualizaciones sobre el estado de tus pedidos.</div>
+                        </div>
+                        
+                        <div class="form-check form-switch mb-3">
+                            {{ notification_form.email_newsletter(class="form-check-input") }}
+                            {{ notification_form.email_newsletter.label(class="form-check-label") }}
+                            <div class="form-text">Recibe nuestro boletín mensual con novedades y tendencias.</div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-bell me-2"></i>Guardar preferencias
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

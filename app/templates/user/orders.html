@@ -1,0 +1,159 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Menu00fa lateral -->
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Mi cuenta</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('user.profile') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-user me-2"></i>Perfil
+                    </a>
+                    <a href="{{ url_for('user.orders') }}" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-shopping-cart me-2"></i>Mis pedidos
+                    </a>
+                    <a href="{{ url_for('user.addresses') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-map-marker-alt me-2"></i>Direcciones
+                    </a>
+                    <a href="{{ url_for('user.wishlist') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-heart me-2"></i>Lista de deseos
+                    </a>
+                    <a href="{{ url_for('auth.logout') }}" class="list-group-item list-group-item-action text-danger">
+                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar sesiu00f3n
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contenido principal -->
+        <div class="col-md-9">
+            <h1 class="mb-4">Mis pedidos</h1>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            {% if orders.items %}
+                <!-- Lista de pedidos -->
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">Pedido #</th>
+                                        <th scope="col">Fecha</th>
+                                        <th scope="col">Total</th>
+                                        <th scope="col">Estado</th>
+                                        <th scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in orders.items %}
+                                        <tr>
+                                            <td>{{ order.id }}</td>
+                                            <td>{{ order.date_ordered.strftime('%d/%m/%Y %H:%M') }}</td>
+                                            <td>${{ "%.2f"|format(order.total_amount) }}</td>
+                                            <td>
+                                                {% if order.status == 'pending' %}
+                                                    <span class="badge bg-warning">Pendiente</span>
+                                                {% elif order.status == 'processing' %}
+                                                    <span class="badge bg-info">Procesando</span>
+                                                {% elif order.status == 'shipped' %}
+                                                    <span class="badge bg-primary">Enviado</span>
+                                                {% elif order.status == 'delivered' %}
+                                                    <span class="badge bg-success">Entregado</span>
+                                                {% elif order.status == 'cancelled' %}
+                                                    <span class="badge bg-danger">Cancelado</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{{ url_for('user.order_detail', order_id=order.id) }}" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-eye"></i> Ver detalles
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Paginaciu00f3n -->
+                    {% if orders.pages > 1 %}
+                        <div class="card-footer bg-white">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center mb-0">
+                                    {% if orders.has_prev %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('user.orders', page=orders.prev_num) }}" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    
+                                    {% for page_num in orders.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                                        {% if page_num %}
+                                            {% if orders.page == page_num %}
+                                                <li class="page-item active">
+                                                    <a class="page-link" href="{{ url_for('user.orders', page=page_num) }}">{{ page_num }}</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item">
+                                                    <a class="page-link" href="{{ url_for('user.orders', page=page_num) }}">{{ page_num }}</a>
+                                                </li>
+                                            {% endif %}
+                                        {% else %}
+                                            <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    {% if orders.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('user.orders', page=orders.next_num) }}" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+                        <h3>No tienes pedidos au00fan</h3>
+                        <p class="text-muted">Cuando realices compras, podru00e1s ver el historial de tus pedidos aquu00ed.</p>
+                        <a href="{{ url_for('main.home') }}" class="btn btn-primary mt-3">
+                            <i class="fas fa-shopping-bag me-2"></i>Ir a comprar
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

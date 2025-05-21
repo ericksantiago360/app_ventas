@@ -1,0 +1,249 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container py-5">
+    <!-- Encabezado -->
+    <div class="row mb-5">
+        <div class="col-md-8 mx-auto text-center">
+            <h1 class="display-4 mb-4">Sobre nosotros</h1>
+            <p class="lead">Somos una tienda online comprometida con ofrecer productos de alta calidad a precios competitivos, con un servicio al cliente excepcional.</p>
+        </div>
+    </div>
+    
+    <!-- Historia -->
+    <div class="row mb-5 align-items-center">
+        <div class="col-md-6">
+            <img src="{{ url_for('static', filename='images/about/store.jpg') }}" alt="Nuestra tienda" class="img-fluid rounded shadow">
+        </div>
+        <div class="col-md-6">
+            <h2 class="mb-4">Nuestra historia</h2>
+            <p>Fundada en 2010, nuestra tienda naciu00f3 con la visiu00f3n de crear una experiencia de compra online excepcional que combinara la conveniencia digital con el servicio personalizado de una tienda local.</p>
+            <p>A lo largo de los au00f1os, hemos crecido de ser una pequeu00f1a startup a convertirnos en uno de los minoristas online mu00e1s confiables del pau00eds, sirviendo a miles de clientes satisfechos.</p>
+            <p>Nuestra filosofu00eda siempre ha sido poner al cliente en primer lugar, ofreciendo productos de calidad, precios justos y un servicio al cliente inigualable.</p>
+        </div>
+    </div>
+    
+    <!-- Misiou00f3n y Visiou00f3n -->
+    <div class="row mb-5">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-bullseye fa-3x text-primary"></i>
+                    </div>
+                    <h3 class="card-title text-center mb-3">Misiou00f3n</h3>
+                    <p class="card-text">Nuestra misiou00f3n es proporcionar a nuestros clientes una experiencia de compra excepcional, ofreciendo productos de alta calidad a precios competitivos, con un servicio al cliente personalizado y eficiente.</p>
+                    <p class="card-text">Nos esforzamos por ser innovadores, adaptarnos a las necesidades cambiantes del mercado y utilizar la tecnologu00eda para mejorar constantemente la experiencia de compra de nuestros clientes.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-eye fa-3x text-primary"></i>
+                    </div>
+                    <h3 class="card-title text-center mb-3">Visiou00f3n</h3>
+                    <p class="card-text">Nuestra visiou00f3n es convertirnos en el minorista online preferido por los consumidores, reconocido por nuestra excelencia en servicio al cliente, calidad de productos y compromiso con la satisfacciu00f3n del cliente.</p>
+                    <p class="card-text">Aspiramos a ser lu00edderes en innovaciu00f3n en el comercio electru00f3nico, estableciendo nuevos estu00e1ndares en la industria y expandiendo nuestra presencia a nivel nacional e internacional.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Valores -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2>Nuestros valores</h2>
+            <p class="lead">Los principios que guu00edan nuestras decisiones y acciones</p>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <i class="fas fa-heart fa-3x text-danger mb-3"></i>
+                    <h4 class="card-title">Pasiu00f3n por el cliente</h4>
+                    <p class="card-text">Ponemos al cliente en el centro de todo lo que hacemos, esforzou00e1ndonos por superar sus expectativas y construir relaciones duraderas basadas en la confianza.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <i class="fas fa-gem fa-3x text-primary mb-3"></i>
+                    <h4 class="card-title">Calidad</h4>
+                    <p class="card-text">Nos comprometemos a ofrecer productos y servicios de la mu00e1s alta calidad, seleccionando cuidadosamente nuestro inventario y verificando cada detalle.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <i class="fas fa-lightbulb fa-3x text-warning mb-3"></i>
+                    <h4 class="card-title">Innovaciu00f3n</h4>
+                    <p class="card-text">Buscamos constantemente nuevas formas de mejorar, adoptando tecnologu00edas emergentes y enfoques creativos para ofrecer soluciones que beneficien a nuestros clientes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Equipo -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2>Nuestro equipo</h2>
+            <p class="lead">Conoce a las personas detrau00e1s de nuestra tienda</p>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <img src="{{ url_for('static', filename='images/about/team1.jpg') }}" class="card-img-top" alt="Miembro del equipo">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Carlos Mendoza</h5>
+                    <p class="card-text text-muted">CEO & Fundador</p>
+                    <div class="social-icons">
+                        <a href="#" class="text-decoration-none me-2"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-decoration-none me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-decoration-none"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <img src="{{ url_for('static', filename='images/about/team2.jpg') }}" class="card-img-top" alt="Miembro del equipo">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Ana Gu00f3mez</h5>
+                    <p class="card-text text-muted">Directora de Operaciones</p>
+                    <div class="social-icons">
+                        <a href="#" class="text-decoration-none me-2"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-decoration-none me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-decoration-none"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <img src="{{ url_for('static', filename='images/about/team3.jpg') }}" class="card-img-top" alt="Miembro del equipo">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Roberto Vega</h5>
+                    <p class="card-text text-muted">Director de Tecnologu00eda</p>
+                    <div class="social-icons">
+                        <a href="#" class="text-decoration-none me-2"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-decoration-none me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-decoration-none"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <img src="{{ url_for('static', filename='images/about/team4.jpg') }}" class="card-img-top" alt="Miembro del equipo">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Laura Sou00e1rez</h5>
+                    <p class="card-text text-muted">Directora de Marketing</p>
+                    <div class="social-icons">
+                        <a href="#" class="text-decoration-none me-2"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-decoration-none me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-decoration-none"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Testimonios -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2>Lo que dicen nuestros clientes</h2>
+            <p class="lead">Testimonios de clientes satisfechos</p>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-center mb-3">
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="card-text fst-italic text-center">"Excelente servicio y productos de alta calidad. Mi pedido llegu00f3 antes de lo esperado y todo estaba en perfectas condiciones. Definitivamente volveru00e9 a comprar aquu00ed."</p>
+                    <div class="d-flex align-items-center mt-3">
+                        <img src="{{ url_for('static', filename='images/about/customer1.jpg') }}" alt="Cliente" class="rounded-circle me-3" width="50">
+                        <div>
+                            <h6 class="mb-0">Miguel Ramos</h6>
+                            <small class="text-muted">Cliente desde 2018</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-center mb-3">
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="card-text fst-italic text-center">"El servicio al cliente es excepcional. Tuve un problema con mi pedido y lo resolvieron de inmediato. Me encanta la variedad de productos y los precios son muy competitivos."</p>
+                    <div class="d-flex align-items-center mt-3">
+                        <img src="{{ url_for('static', filename='images/about/customer2.jpg') }}" alt="Cliente" class="rounded-circle me-3" width="50">
+                        <div>
+                            <h6 class="mb-0">Sofía Martínez</h6>
+                            <small class="text-muted">Cliente desde 2020</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-center mb-3">
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="card-text fst-italic text-center">"La navegaciu00f3n por la tienda es muy intuitiva y fu00e1cil de usar. He comprado varias veces y siempre he quedado satisfecho con mis compras. Los recomiendo ampliamente."</p>
+                    <div class="d-flex align-items-center mt-3">
+                        <img src="{{ url_for('static', filename='images/about/customer3.jpg') }}" alt="Cliente" class="rounded-circle me-3" width="50">
+                        <div>
+                            <h6 class="mb-0">Javier Herrera</h6>
+                            <small class="text-muted">Cliente desde 2019</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- CTA -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body p-5 text-center">
+                    <h2 class="mb-3">u00danete a nuestra comunidad</h2>
+                    <p class="lead mb-4">Recibe ofertas exclusivas, noticias sobre nuevos productos y mu00e1s.</p>
+                    <form class="row g-3 justify-content-center">
+                        <div class="col-auto">
+                            <input type="email" class="form-control" placeholder="Tu correo electru00f3nico">
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-light">Suscribirse</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

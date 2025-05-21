@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="error-template">
+                <h1 class="display-1 text-danger">404</h1>
+                <h2 class="mb-4">u00a1Pu00e1gina no encontrada!</h2>
+                <div class="error-details mb-4">
+                    <p>Lo sentimos, la pu00e1gina que estu00e1s buscando no existe o ha sido movida.</p>
+                </div>
+                <div class="error-actions">
+                    <a href="{{ url_for('main.home') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-home me-2"></i>Volver al inicio
+                    </a>
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-outline-secondary btn-lg ms-2">
+                        <i class="fas fa-envelope me-2"></i>Contactar soporte
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="text-center mb-4">u00bfBuscabas algo especu00edfico?</h3>
+            <div class="card">
+                <div class="card-body">
+                    <form action="{{ url_for('products.search') }}" method="GET" class="d-flex">
+                        <input class="form-control me-2" type="search" name="q" placeholder="Buscar productos..." aria-label="Search">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="text-center mb-4">Categoru00edas populares</h3>
+            <div class="row">
+                {% for category in popular_categories %}
+                    <div class="col-md-4 mb-4">
+                        <a href="{{ url_for('products.category', category_id=category.id) }}" class="text-decoration-none">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="{{ category.icon }} fa-3x mb-3 text-primary"></i>
+                                    <h5 class="card-title">{{ category.name }}</h5>
+                                    <p class="card-text text-muted">{{ category.description }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

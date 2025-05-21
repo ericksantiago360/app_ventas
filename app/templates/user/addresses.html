@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Menu00fa lateral -->
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Mi cuenta</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('user.profile') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-user me-2"></i>Perfil
+                    </a>
+                    <a href="{{ url_for('user.orders') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-shopping-cart me-2"></i>Mis pedidos
+                    </a>
+                    <a href="{{ url_for('user.addresses') }}" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-map-marker-alt me-2"></i>Direcciones
+                    </a>
+                    <a href="{{ url_for('user.wishlist') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-heart me-2"></i>Lista de deseos
+                    </a>
+                    <a href="{{ url_for('auth.logout') }}" class="list-group-item list-group-item-action text-danger">
+                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar sesiu00f3n
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contenido principal -->
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="mb-0">Mis direcciones</h1>
+                <a href="{{ url_for('user.add_address') }}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Au00f1adir direcciu00f3n
+                </a>
+            </div>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            {% if addresses %}
+                <div class="row">
+                    {% for address in addresses %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        {{ address.alias }}
+                                        {% if address.is_default %}
+                                            <span class="badge bg-primary ms-2">Predeterminada</span>
+                                        {% endif %}
+                                    </h5>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary" type="button" id="addressActions{{ address.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="addressActions{{ address.id }}">
+                                            <li>
+                                                <a class="dropdown-item" href="{{ url_for('user.edit_address', address_id=address.id) }}">
+                                                    <i class="fas fa-edit me-2"></i>Editar
+                                                </a>
+                                            </li>
+                                            {% if not address.is_default %}
+                                                <li>
+                                                    <form action="{{ url_for('user.set_default_address', address_id=address.id) }}" method="post">
+                                                        <button type="submit" class="dropdown-item">
+                                                            <i class="fas fa-check-circle me-2"></i>Establecer como predeterminada
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                                <li>
+                                                    <form action="{{ url_for('user.delete_address', address_id=address.id) }}" method="post" onsubmit="return confirm('u00bfEstu00e1s seguro de que deseas eliminar esta direcciu00f3n?');">
+                                                        <button type="submit" class="dropdown-item text-danger">
+                                                            <i class="fas fa-trash me-2"></i>Eliminar
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Destinatario:</strong> {{ address.recipient_name }}</p>
+                                    <p><strong>Direcciu00f3n:</strong> {{ address.street }}</p>
+                                    <p><strong>Ciudad:</strong> {{ address.city }}</p>
+                                    <p><strong>Estado:</strong> {{ address.state }}</p>
+                                    <p><strong>Cu00f3digo postal:</strong> {{ address.zip_code }}</p>
+                                    <p class="mb-0"><strong>Telu00e9fono:</strong> {{ address.phone_number }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-map-marker-alt fa-4x text-muted mb-3"></i>
+                        <h3>No tienes direcciones guardadas</h3>
+                        <p class="text-muted">Au00f1ade una direcciu00f3n para agilizar tus compras futuras.</p>
+                        <a href="{{ url_for('user.add_address') }}" class="btn btn-primary mt-3">
+                            <i class="fas fa-plus me-2"></i>Au00f1adir direcciu00f3n
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

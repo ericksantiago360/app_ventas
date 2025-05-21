@@ -1,0 +1,202 @@
+{% extends "layout.html" %}
+{% block content %}
+    <!-- Banner principal -->
+    <div id="mainCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
+        </div>
+        <div class="carousel-inner rounded shadow">
+            <div class="carousel-item active">
+                <img src="https://via.placeholder.com/1200x400/007bff/ffffff?text=Ofertas+Especiales" class="d-block w-100" alt="Ofertas Especiales">
+                <div class="carousel-caption d-none d-md-block">
+                    <h2>Ofertas Especiales</h2>
+                    <p>Descubre nuestras mejores ofertas con hasta 40% de descuento</p>
+                    <a href="{{ url_for('products.offers') }}" class="btn btn-primary">Ver Ofertas</a>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://via.placeholder.com/1200x400/28a745/ffffff?text=Nuevos+Productos" class="d-block w-100" alt="Nuevos Productos">
+                <div class="carousel-caption d-none d-md-block">
+                    <h2>Nuevos Productos</h2>
+                    <p>Conoce las u00faltimas novedades en nuestra tienda</p>
+                    <a href="#" class="btn btn-success">Explorar</a>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://via.placeholder.com/1200x400/dc3545/ffffff?text=Envu00edo+Gratis" class="d-block w-100" alt="Envu00edo Gratis">
+                <div class="carousel-caption d-none d-md-block">
+                    <h2>Envu00edo Gratis</h2>
+                    <p>En compras mayores a $499</p>
+                    <a href="#" class="btn btn-danger">Mu00e1s Informaciu00f3n</a>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+            <span class="visually-hidden">Siguiente</span>
+        </button>
+    </div>
+    
+    <!-- Beneficios -->
+    <div class="row mb-5 text-center">
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-truck fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Envu00edo seguro</h5>
+                    <p class="card-text text-muted">Entrega a domicilio en todo el pau00eds</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Hasta 2 au00f1os de garantu00eda</h5>
+                    <p class="card-text text-muted">Respaldamos todos nuestros productos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-star fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Productos exclusivos</h5>
+                    <p class="card-text text-muted">Las mejores marcas y calidad</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-lock fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Compra segura</h5>
+                    <p class="card-text text-muted">Pagos seguros y protegidos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Productos destacados -->
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Productos Destacados</h2>
+            <a href="{{ url_for('products.featured') }}" class="btn btn-outline-primary">Ver todos</a>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            {% for product in featured_products %}
+                <div class="col">
+                    <div class="card h-100 product-card">
+                        {% if product.is_on_sale() %}
+                            <div class="badge bg-danger position-absolute top-0 end-0 m-2">-{{ product.discount_percentage() }}%</div>
+                        {% endif %}
+                        <a href="{{ url_for('products.product_detail', product_id=product.id) }}">
+                            <img src="{{ url_for('static', filename='images/products/' + product.image_file) }}" class="card-img-top" alt="{{ product.name }}">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text small text-muted">{{ product.brand }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if product.is_on_sale() %}
+                                        <span class="text-muted text-decoration-line-through">${{ "%.2f"|format(product.price) }}</span>
+                                        <span class="text-danger fw-bold ms-2">${{ "%.2f"|format(product.sale_price) }}</span>
+                                    {% else %}
+                                        <span class="fw-bold">${{ "%.2f"|format(product.price) }}</span>
+                                    {% endif %}
+                                </div>
+                                <a href="{{ url_for('products.product_detail', product_id=product.id) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i> Ver
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Ofertas -->
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Ofertas del Du00eda</h2>
+            <a href="{{ url_for('products.offers') }}" class="btn btn-outline-danger">Ver todas</a>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            {% for product in sale_products %}
+                <div class="col">
+                    <div class="card h-100 product-card">
+                        <div class="badge bg-danger position-absolute top-0 end-0 m-2">-{{ product.discount_percentage() }}%</div>
+                        <a href="{{ url_for('products.product_detail', product_id=product.id) }}">
+                            <img src="{{ url_for('static', filename='images/products/' + product.image_file) }}" class="card-img-top" alt="{{ product.name }}">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text small text-muted">{{ product.brand }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted text-decoration-line-through">${{ "%.2f"|format(product.price) }}</span>
+                                    <span class="text-danger fw-bold ms-2">${{ "%.2f"|format(product.sale_price) }}</span>
+                                </div>
+                                <a href="{{ url_for('products.product_detail', product_id=product.id) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i> Ver
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Categoru00edas principales -->
+    <div class="mb-5">
+        <h2 class="mb-4">Categoru00edas Principales</h2>
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-4">
+            {% for category in categories %}
+                <div class="col">
+                    <a href="{{ url_for('products.category', category_id=category.id) }}" class="text-decoration-none">
+                        <div class="card h-100 text-center category-card">
+                            <div class="card-body">
+                                {% if category.image %}
+                                    <img src="{{ url_for('static', filename='images/categories/' + category.image) }}" class="img-fluid mb-3" alt="{{ category.name }}" style="max-height: 80px;">
+                                {% else %}
+                                    <i class="fas fa-box fa-3x text-primary mb-3"></i>
+                                {% endif %}
+                                <h5 class="card-title">{{ category.name }}</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Banner secundario -->
+    <div class="row mb-5">
+        <div class="col-md-6 mb-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body p-4">
+                    <h3>Nuevas Llegadas</h3>
+                    <p class="mb-4">Descubre los u00faltimos productos que han llegado a nuestra tienda</p>
+                    <a href="#" class="btn btn-light">Explorar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card bg-danger text-white">
+                <div class="card-body p-4">
+                    <h3>Liquidaciu00f3n</h3>
+                    <p class="mb-4">Aprovecha los u00faltimos productos en liquidaciu00f3n con descuentos increu00edbles</p>
+                    <a href="#" class="btn btn-light">Ver Ofertas</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

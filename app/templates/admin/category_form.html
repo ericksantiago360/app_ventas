@@ -1,0 +1,157 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Panel de Administraciu00f3n</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('admin.dashboard') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                    <a href="{{ url_for('admin.products') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-box me-2"></i>Productos
+                    </a>
+                    <a href="{{ url_for('admin.categories') }}" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-tags me-2"></i>Categoru00edas
+                    </a>
+                    <a href="{{ url_for('admin.orders') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-shopping-cart me-2"></i>Pedidos
+                    </a>
+                    <a href="{{ url_for('admin.users') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-users me-2"></i>Usuarios
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">{% if category %}Editar Categoru00eda{% else %}Nueva Categoru00eda{% endif %}</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row">
+                            <!-- Informaciu00f3n bu00e1sica -->
+                            <div class="col-md-8">
+                                <div class="card mb-4">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">Informaciu00f3n Bu00e1sica</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            {{ form.name.label(class="form-label") }}
+                                            {% if form.name.errors %}
+                                                {{ form.name(class="form-control is-invalid") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.name.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.name(class="form-control") }}
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            {{ form.description.label(class="form-label") }}
+                                            {% if form.description.errors %}
+                                                {{ form.description(class="form-control is-invalid", rows=3) }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.description.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.description(class="form-control", rows=3) }}
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            {{ form.parent_id.label(class="form-label") }}
+                                            {% if form.parent_id.errors %}
+                                                {{ form.parent_id(class="form-select is-invalid") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.parent_id.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.parent_id(class="form-select") }}
+                                            {% endif %}
+                                            <div class="form-text">Dejar en blanco si es una categoru00eda principal</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Imagen y estado -->
+                            <div class="col-md-4">
+                                <div class="card mb-4">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">Imagen</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        {% if category and category.image %}
+                                            <div class="text-center mb-3">
+                                                <img src="{{ url_for('static', filename='images/categories/' + category.image) }}" alt="{{ category.name }}" class="img-fluid img-thumbnail mb-2" style="max-height: 150px;">
+                                                <p class="small text-muted">Imagen actual</p>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        <div class="mb-3">
+                                            {{ form.image.label(class="form-label") }}
+                                            {% if form.image.errors %}
+                                                {{ form.image(class="form-control is-invalid") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.image.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.image(class="form-control") }}
+                                            {% endif %}
+                                            <div class="form-text">Formatos aceptados: JPG, PNG, GIF. Mu00e1ximo 2MB.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">Estado</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-check form-switch mb-3">
+                                            {{ form.is_active(class="form-check-input") }}
+                                            {{ form.is_active.label(class="form-check-label") }}
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            {{ form.show_in_menu(class="form-check-input") }}
+                                            {{ form.show_in_menu.label(class="form-check-label") }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Botones de acciu00f3n -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ url_for('admin.categories') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Volver a categoru00edas
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>{% if category %}Actualizar{% else %}Guardar{% endif %} categoru00eda
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

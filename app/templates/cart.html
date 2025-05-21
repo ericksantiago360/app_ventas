@@ -1,0 +1,192 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Carrito de Compras</h1>
+    
+    {% if cart_items %}
+        <div class="row">
+            <!-- Productos del carrito -->
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Productos ({{ cart_items|length }})</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-borderless align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col" class="ps-4">Producto</th>
+                                        <th scope="col" class="text-center">Precio</th>
+                                        <th scope="col" class="text-center">Cantidad</th>
+                                        <th scope="col" class="text-center">Subtotal</th>
+                                        <th scope="col" class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in cart_items %}
+                                        {% if current_user.is_authenticated %}
+                                            {% set product = item.product %}
+                                            {% set quantity = item.quantity %}
+                                        {% else %}
+                                            {% set product = item.product %}
+                                            {% set quantity = item.quantity %}
+                                        {% endif %}
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <img src="{{ url_for('static', filename='images/products/' + product.image_file) }}" alt="{{ product.name }}" class="img-thumbnail" style="width: 80px;">
+                                                    <div class="ms-3">
+                                                        <h6 class="mb-1">{{ product.name }}</h6>
+                                                        <small class="text-muted">{{ product.brand }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                {% if product.is_on_sale() %}
+                                                    <span class="text-muted text-decoration-line-through small">${{ "%.2f"|format(product.price) }}</span><br>
+                                                    <span class="text-danger">${{ "%.2f"|format(product.sale_price) }}</span>
+                                                {% else %}
+                                                    <span>${{ "%.2f"|format(product.price) }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">
+                                                <form action="{{ url_for('cart.update_cart', product_id=product.id) }}" method="post" class="d-inline">
+                                                    <div class="input-group input-group-sm" style="width: 100px;">
+                                                        <select class="form-select" name="quantity" onchange="this.form.submit()">
+                                                            {% for i in range(1, min(product.stock + 1, 11)) %}
+                                                                <option value="{{ i }}" {% if i == quantity %}selected{% endif %}>{{ i }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="fw-bold">${{ "%.2f"|format(product.current_price() * quantity) }}</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <form action="{{ url_for('cart.remove_from_cart', product_id=product.id) }}" method="post" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('u00bfEstu00e1s seguro de eliminar este producto del carrito?')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ url_for('main.home') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-arrow-left me-2"></i>Seguir comprando
+                            </a>
+                            <a href="#" class="btn btn-outline-secondary">
+                                <i class="fas fa-sync-alt me-2"></i>Actualizar carrito
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resumen del pedido -->
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Resumen del pedido</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Subtotal</span>
+                            <span>${{ "%.2f"|format(total) }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Envu00edo</span>
+                            {% if total >= 499 %}
+                                <span class="text-success">Gratis</span>
+                            {% else %}
+                                <span>$99.00</span>
+                            {% endif %}
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3 fw-bold">
+                            <span>Total</span>
+                            {% if total >= 499 %}
+                                <span>${{ "%.2f"|format(total) }}</span>
+                            {% else %}
+                                <span>${{ "%.2f"|format(total + 99) }}</span>
+                            {% endif %}
+                        </div>
+                        
+                        {% if current_user.is_authenticated %}
+                            <div class="d-grid gap-2 mt-4">
+                                <a href="{{ url_for('cart.checkout') }}" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-credit-card me-2"></i>Proceder al pago
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info mb-0">
+                                <p class="mb-2">Inicia sesiu00f3n para completar tu compra</p>
+                                <div class="d-grid gap-2">
+                                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
+                                        <i class="fas fa-sign-in-alt me-2"></i>Iniciar sesiu00f3n
+                                    </a>
+                                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary">
+                                        <i class="fas fa-user-plus me-2"></i>Crear cuenta
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Cu00f3digo promocional -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Cu00f3digo promocional</h5>
+                        <form>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Ingresa tu cu00f3digo">
+                                <button class="btn btn-outline-primary" type="button">Aplicar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Mu00e9todos de pago -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Aceptamos</h5>
+                        <div class="d-flex gap-2">
+                            <i class="fab fa-cc-visa fa-2x text-primary"></i>
+                            <i class="fab fa-cc-mastercard fa-2x text-primary"></i>
+                            <i class="fab fa-cc-amex fa-2x text-primary"></i>
+                            <i class="fab fa-paypal fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+                <h3>Tu carrito estu00e1 vacu00edo</h3>
+                <p class="text-muted mb-4">Parece que au00fan no has agregado productos a tu carrito</p>
+                <a href="{{ url_for('main.home') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-shopping-bag me-2"></i>Ir de compras
+                </a>
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Productos recomendados -->
+    <div class="mt-5">
+        <h3 class="mb-4">Tambu00e9n te puede interesar</h3>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            <!-- Aqu00ed se pueden mostrar productos recomendados -->
+        </div>
+    </div>
+</div>
+{% endblock %}

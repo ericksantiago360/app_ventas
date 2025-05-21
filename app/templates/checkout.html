@@ -1,0 +1,292 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Checkout</h1>
+    
+    <div class="row">
+        <!-- Formulario de checkout -->
+        <div class="col-lg-8">
+            <form method="POST" action="{{ url_for('cart.checkout') }}">
+                {{ form.hidden_tag() }}
+                
+                <!-- Direcciu00f3n de envu00edo -->
+                <div class="card mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Direcciu00f3n de envu00edo</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if addresses %}
+                            <div class="mb-4">
+                                <h6 class="mb-3">Selecciona una direcciu00f3n guardada:</h6>
+                                {% for address in addresses %}
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="saved_address" id="address{{ address.id }}" value="{{ address.id }}" {% if loop.first %}checked{% endif %}>
+                                        <label class="form-check-label" for="address{{ address.id }}">
+                                            <strong>{{ address.recipient_name }}</strong><br>
+                                            {{ address.street }}, {{ address.city }}, {{ address.state }}, {{ address.zip_code }}<br>
+                                            {{ address.phone_number }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="saved_address" id="new_address" value="new">
+                                    <label class="form-check-label" for="new_address">
+                                        Usar una nueva direcciu00f3n
+                                    </label>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <div id="new_address_form" {% if addresses %}style="display: none;"{% endif %}>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.recipient_name.label(class="form-label") }}
+                                    {% if form.recipient_name.errors %}
+                                        {{ form.recipient_name(class="form-control is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.recipient_name.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.recipient_name(class="form-control") }}
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    {{ form.phone_number.label(class="form-label") }}
+                                    {% if form.phone_number.errors %}
+                                        {{ form.phone_number(class="form-control is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.phone_number.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.phone_number(class="form-control") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                {{ form.street.label(class="form-label") }}
+                                {% if form.street.errors %}
+                                    {{ form.street(class="form-control is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.street.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.street(class="form-control") }}
+                                {% endif %}
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 mb-3">
+                                    {{ form.city.label(class="form-label") }}
+                                    {% if form.city.errors %}
+                                        {{ form.city(class="form-control is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.city.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.city(class="form-control") }}
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    {{ form.state.label(class="form-label") }}
+                                    {% if form.state.errors %}
+                                        {{ form.state(class="form-control is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.state.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.state(class="form-control") }}
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    {{ form.zip_code.label(class="form-label") }}
+                                    {% if form.zip_code.errors %}
+                                        {{ form.zip_code(class="form-control is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.zip_code.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.zip_code(class="form-control") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="form-check mb-3">
+                                {{ form.save_address(class="form-check-input") }}
+                                {{ form.save_address.label(class="form-check-label") }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mu00e9todo de pago -->
+                <div class="card mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Mu00e9todo de pago</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="payment_method" id="credit_card" value="credit_card" checked>
+                                <label class="form-check-label" for="credit_card">
+                                    <i class="fas fa-credit-card me-2"></i>Tarjeta de cru00e9dito/du00e9bito
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="payment_method" id="paypal" value="paypal">
+                                <label class="form-check-label" for="paypal">
+                                    <i class="fab fa-paypal me-2"></i>PayPal
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="payment_method" id="cash" value="cash">
+                                <label class="form-check-label" for="cash">
+                                    <i class="fas fa-money-bill-wave me-2"></i>Pago en efectivo al recibir
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="credit_card_form">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="cc_name" class="form-label">Nombre en la tarjeta</label>
+                                    <input type="text" class="form-control" id="cc_name" placeholder="Nombre completo">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="cc_number" class="form-label">Nu00famero de tarjeta</label>
+                                    <input type="text" class="form-control" id="cc_number" placeholder="XXXX XXXX XXXX XXXX">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="cc_expiration" class="form-label">Fecha de expiraciu00f3n</label>
+                                    <input type="text" class="form-control" id="cc_expiration" placeholder="MM/AA">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="cc_cvv" class="form-label">CVV</label>
+                                    <input type="text" class="form-control" id="cc_cvv" placeholder="XXX">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notas del pedido -->
+                <div class="card mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Notas del pedido</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            {{ form.order_notes.label(class="form-label") }}
+                            {{ form.order_notes(class="form-control", rows=3) }}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Boton de confirmar pedido -->
+                <div class="d-grid gap-2">
+                    {{ form.submit(class="btn btn-primary btn-lg") }}
+                </div>
+            </form>
+        </div>
+        
+        <!-- Resumen del pedido -->
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Resumen del pedido</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for item in cart_items %}
+                            <div class="list-group-item py-3">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <img src="{{ url_for('static', filename='images/products/' + item.product.image_file) }}" alt="{{ item.product.name }}" class="img-thumbnail" style="width: 60px;">
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-0">{{ item.product.name }}</h6>
+                                        <small class="text-muted">Cantidad: {{ item.quantity }}</small>
+                                        <div class="mt-1">
+                                            {% if item.product.is_on_sale() %}
+                                                <span class="fw-bold">${{ "%.2f"|format(item.product.sale_price * item.quantity) }}</span>
+                                            {% else %}
+                                                <span class="fw-bold">${{ "%.2f"|format(item.product.price * item.quantity) }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>${{ "%.2f"|format(total) }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Envu00edo</span>
+                        {% if total >= 499 %}
+                            <span class="text-success">Gratis</span>
+                        {% else %}
+                            <span>$99.00</span>
+                        {% endif %}
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span>Total</span>
+                        {% if total >= 499 %}
+                            <span>${{ "%.2f"|format(total) }}</span>
+                        {% else %}
+                            <span>${{ "%.2f"|format(total + 99) }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Script para mostrar/ocultar el formulario de nueva direcciu00f3n
+    document.addEventListener('DOMContentLoaded', function() {
+        const addressRadios = document.querySelectorAll('input[name="saved_address"]');
+        const newAddressForm = document.getElementById('new_address_form');
+        
+        addressRadios.forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                if (this.value === 'new') {
+                    newAddressForm.style.display = 'block';
+                } else {
+                    newAddressForm.style.display = 'none';
+                }
+            });
+        });
+        
+        // Script para mostrar/ocultar formularios de pago
+        const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
+        const creditCardForm = document.getElementById('credit_card_form');
+        
+        paymentRadios.forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                if (this.value === 'credit_card') {
+                    creditCardForm.style.display = 'block';
+                } else {
+                    creditCardForm.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Información legal</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('main.terms') }}" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-file-contract me-2"></i>Términos y condiciones
+                    </a>
+                    <a href="{{ url_for('main.privacy') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-user-shield me-2"></i>Política de privacidad
+                    </a>
+                    <a href="{{ url_for('main.shipping') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-shipping-fast me-2"></i>Política de envíos
+                    </a>
+                    <a href="{{ url_for('main.returns') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-undo me-2"></i>Política de devoluciones
+                    </a>
+                    <a href="{{ url_for('main.faq') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-question-circle me-2"></i>Preguntas frecuentes
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h1 class="h3 mb-0">Términos y condiciones</h1>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Última actualización: 1 de enero de 2023</p>
+                    
+                    <h4 class="mt-4">1. Introducción</h4>
+                    <p>Bienvenido a nuestra tienda en línea. Estos Términos y Condiciones rigen el uso de nuestro sitio web y los servicios ofrecidos por nuestra empresa. Al acceder o utilizar nuestro sitio web, usted acepta estos términos y condiciones en su totalidad. Si no está de acuerdo con estos términos y condiciones o cualquier parte de estos, no debe utilizar nuestro sitio web.</p>
+                    
+                    <h4 class="mt-4">2. Definiciones</h4>
+                    <p>En estos Términos y Condiciones:</p>
+                    <ul>
+                        <li>"Cliente", "Usted" y "Su" se refiere a usted, la persona que accede a este sitio web y acepta los términos y condiciones de la empresa.</li>
+                        <li>"La Empresa", "Nosotros", "Nuestro" y "Nos" se refiere a nuestra empresa.</li>
+                        <li>"Parte", "Partes" o "Nosotros" se refiere tanto al Cliente como a nosotros, o al Cliente o a nosotros.</li>
+                        <li>"Sitio web" se refiere a nuestra tienda en línea.</li>
+                        <li>"Servicio" se refiere a los servicios ofrecidos por nuestra empresa a través del sitio web.</li>
+                        <li>"Contenido" se refiere a todo el material, información, productos y servicios proporcionados por nosotros o terceros en el sitio web.</li>
+                    </ul>
+                    
+                    <h4 class="mt-4">3. Uso del sitio</h4>
+                    <p>El uso de este sitio web está sujeto a las siguientes condiciones de uso:</p>
+                    <ul>
+                        <li>La edad mínima para realizar compras en nuestro sitio web es de 18 años.</li>
+                        <li>Usted no debe utilizar nuestro sitio web de ninguna manera que cause, o pueda causar, daño al sitio web o deterioro de la disponibilidad o accesibilidad del sitio web.</li>
+                        <li>Usted no debe utilizar nuestro sitio web de ninguna manera que sea ilegal, fraudulenta o dañina, o en conexión con cualquier propósito o actividad ilegal, fraudulenta o dañina.</li>
+                        <li>Usted no debe utilizar nuestro sitio web para copiar, almacenar, alojar, transmitir, enviar, usar, publicar o distribuir cualquier material que consista en (o esté vinculado a) cualquier spyware, virus informático, troyano, gusano, registrador de pulsaciones, rootkit u otro software malicioso.</li>
+                        <li>Usted no debe realizar actividades de recopilación sistemática de datos o extracción de datos en o en relación con nuestro sitio web.</li>
+                    </ul>
+                    
+                    <h4 class="mt-4">4. Registro y cuentas de usuario</h4>
+                    <p>Para realizar compras en nuestro sitio web, puede ser necesario registrarse y crear una cuenta de usuario. Al registrarse, usted acepta:</p>
+                    <ul>
+                        <li>Proporcionar información precisa, actualizada y completa durante el proceso de registro.</li>
+                        <li>Mantener y actualizar rápidamente la información de su cuenta para mantenerla precisa, actualizada y completa.</li>
+                        <li>Ser responsable de mantener la confidencialidad de su contraseña y de restringir el acceso a su cuenta.</li>
+                        <li>Aceptar la responsabilidad de todas las actividades que ocurran bajo su cuenta o contraseña.</li>
+                        <li>Notificarnos inmediatamente sobre cualquier uso no autorizado de su cuenta o cualquier otra violación de seguridad.</li>
+                    </ul>
+                    
+                    <h4 class="mt-4">5. Productos y servicios</h4>
+                    <p>Todos los productos y servicios que se muestran en nuestro sitio web están sujetos a disponibilidad. Nos reservamos el derecho de descontinuar cualquier producto o servicio en cualquier momento.</p>
+                    <p>Los precios de nuestros productos están sujetos a cambios sin previo aviso. Nos reservamos el derecho de modificar o discontinuar el Servicio (o cualquier parte o contenido del mismo) sin previo aviso en cualquier momento.</p>
+                    <p>No seremos responsables ante usted o cualquier tercero por cualquier modificación, cambio de precio, suspensión o discontinuidad del Servicio.</p>
+                    
+                    <h4 class="mt-4">6. Precios y pagos</h4>
+                    <p>Todos los precios mostrados en el sitio web incluyen IVA y otros impuestos aplicables, a menos que se indique lo contrario.</p>
+                    <p>Aceptamos los siguientes métodos de pago:</p>
+                    <ul>
+                        <li>Tarjetas de crédito y débito (Visa, MasterCard, American Express)</li>
+                        <li>PayPal</li>
+                        <li>Transferencias bancarias</li>
+                        <li>Pago en efectivo en tiendas de conveniencia afiliadas</li>
+                    </ul>
+                    <p>El pago se procesará una vez que se haya confirmado el pedido. No se enviará ningún producto hasta que se haya recibido el pago completo.</p>
+                    
+                    <h4 class="mt-4">7. Envíos y entregas</h4>
+                    <p>Realizamos envíos a todo el país. Los tiempos de entrega estimados se proporcionan en el momento de la compra, pero pueden variar debido a circunstancias imprevistas.</p>
+                    <p>Los gastos de envío se calcularán en función del destino y el peso del paquete, y se mostrarán durante el proceso de compra antes de la confirmación del pedido.</p>
+                    <p>Una vez que su pedido haya sido enviado, recibirá un correo electrónico con la información de seguimiento.</p>
+                    
+                    <h4 class="mt-4">8. Devoluciones y reembolsos</h4>
+                    <p>Aceptamos devoluciones dentro de los 30 días posteriores a la recepción del producto, siempre que el producto se devuelva en su estado original, sin usar y con el embalaje original.</p>
+                    <p>Para iniciar una devolución, contacte con nuestro servicio de atención al cliente. Los gastos de envío de la devolución correrán a cargo del cliente, a menos que el producto esté defectuoso o se haya enviado incorrectamente.</p>
+                    <p>Los reembolsos se procesarán dentro de los 14 días posteriores a la recepción del producto devuelto, utilizando el mismo método de pago utilizado para la compra original.</p>
+                    
+                    <h4 class="mt-4">9. Propiedad intelectual</h4>
+                    <p>Todo el contenido incluido en o disponible a través de nuestro sitio web, incluyendo pero no limitado a textos, gráficos, logotipos, iconos, imágenes, clips de audio, descargas digitales y compilaciones de datos, es propiedad de nuestra empresa o de nuestros proveedores de contenido y está protegido por las leyes de propiedad intelectual.</p>
+                    <p>No se permite el uso de ningún contenido de nuestro sitio web para ningún propósito comercial sin nuestro consentimiento previo por escrito.</p>
+                    
+                    <h4 class="mt-4">10. Limitación de responsabilidad</h4>
+                    <p>En la medida permitida por la ley, excluimos todas las representaciones, garantías y condiciones relacionadas con nuestro sitio web y el uso de este sitio web (incluyendo, sin limitación, cualquier garantía implícita por la ley con respecto a la calidad satisfactoria, idoneidad para el propósito y/o el uso de cuidado y habilidad razonables).</p>
+                    <p>Nada en esta exención de responsabilidad:</p>
+                    <ul>
+                        <li>Limitará o excluirá nuestra o su responsabilidad por muerte o lesiones personales resultantes de negligencia.</li>
+                        <li>Limitará o excluirá nuestra o su responsabilidad por fraude o tergiversación fraudulenta.</li>
+                        <li>Limitará cualquiera de nuestras o sus responsabilidades de cualquier manera que no esté permitida bajo la ley aplicable.</li>
+                        <li>Excluirá cualquiera de nuestras o sus responsabilidades que no puedan ser excluidas bajo la ley aplicable.</li>
+                    </ul>
+                    
+                    <h4 class="mt-4">11. Indemnización</h4>
+                    <p>Usted acepta indemnizar, defender y mantener indemne a nuestra empresa, sus funcionarios, directores, empleados, agentes, licenciantes, proveedores de servicios y subcontratistas de y contra todas las pérdidas, gastos, daños y costos, incluidos los honorarios razonables de abogados, resultantes de cualquier violación de estos Términos y Condiciones o cualquier actividad relacionada con su cuenta (incluyendo conducta negligente o ilícita) por parte de usted o cualquier otra persona que acceda al sitio usando su cuenta.</p>
+                    
+                    <h4 class="mt-4">12. Terminación</h4>
+                    <p>Podemos terminar o suspender su acceso a nuestro sitio web inmediatamente, sin previo aviso o responsabilidad, por cualquier razón, incluyendo, sin limitación, si usted incumple los Términos y Condiciones.</p>
+                    <p>Tras la terminación, su derecho a utilizar el sitio web cesará inmediatamente.</p>
+                    
+                    <h4 class="mt-4">13. Ley aplicable</h4>
+                    <p>Estos Términos y Condiciones se regirán e interpretarán de acuerdo con las leyes de México, y cualquier disputa relacionada con estos términos y condiciones estará sujeta a la jurisdicción exclusiva de los tribunales de la Ciudad de México.</p>
+                    
+                    <h4 class="mt-4">14. Cambios en los términos y condiciones</h4>
+                    <p>Nos reservamos el derecho de modificar estos Términos y Condiciones en cualquier momento. Si realizamos cambios materiales a estos Términos y Condiciones, lo notificaremos a través de un aviso prominente en nuestro sitio web.</p>
+                    <p>Su uso continuado del sitio web después de dichos cambios constituye su aceptación de los nuevos Términos y Condiciones.</p>
+                    
+                    <h4 class="mt-4">15. Contacto</h4>
+                    <p>Si tiene alguna pregunta sobre estos Términos y Condiciones, por favor contáctenos a través de:</p>
+                    <ul>
+                        <li>Email: legal@tiendaonline.com</li>
+                        <li>Teléfono: +52 (55) 1234-5678</li>
+                        <li>Dirección: Av. Insurgentes Sur 1602, Ciudad de México, CDMX 03940, México</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

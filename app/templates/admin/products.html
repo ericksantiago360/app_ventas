@@ -1,0 +1,226 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Panel de Administraciu00f3n</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('admin.dashboard') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                    <a href="{{ url_for('admin.products') }}" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-box me-2"></i>Productos
+                    </a>
+                    <a href="{{ url_for('admin.categories') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-tags me-2"></i>Categoru00edas
+                    </a>
+                    <a href="{{ url_for('admin.orders') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-shopping-cart me-2"></i>Pedidos
+                    </a>
+                    <a href="{{ url_for('admin.users') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-users me-2"></i>Usuarios
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="mb-0">Productos</h1>
+                <a href="{{ url_for('admin.add_product') }}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Nuevo Producto
+                </a>
+            </div>
+            
+            <!-- Filtros y bu00fasqueda -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="GET" action="{{ url_for('admin.products') }}">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Buscar productos..." name="search" value="{{ request.args.get('search', '') }}">
+                                    <button class="btn btn-outline-secondary" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" name="category">
+                                    <option value="">Todas las categoru00edas</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}" {% if request.args.get('category')|int == category.id %}selected{% endif %}>
+                                            {{ category.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" name="sort">
+                                    <option value="name_asc" {% if request.args.get('sort') == 'name_asc' %}selected{% endif %}>Nombre (A-Z)</option>
+                                    <option value="name_desc" {% if request.args.get('sort') == 'name_desc' %}selected{% endif %}>Nombre (Z-A)</option>
+                                    <option value="price_asc" {% if request.args.get('sort') == 'price_asc' %}selected{% endif %}>Precio (menor a mayor)</option>
+                                    <option value="price_desc" {% if request.args.get('sort') == 'price_desc' %}selected{% endif %}>Precio (mayor a menor)</option>
+                                    <option value="stock_asc" {% if request.args.get('sort') == 'stock_asc' %}selected{% endif %}>Stock (menor a mayor)</option>
+                                    <option value="stock_desc" {% if request.args.get('sort') == 'stock_desc' %}selected{% endif %}>Stock (mayor a menor)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Lista de productos -->
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Imagen</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Categoru00eda</th>
+                                    <th scope="col">Precio</th>
+                                    <th scope="col">Stock</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products.items %}
+                                    <tr>
+                                        <td>{{ product.id }}</td>
+                                        <td>
+                                            <img src="{{ url_for('static', filename='images/products/' + product.image_file) }}" alt="{{ product.name }}" class="img-thumbnail" style="width: 50px;">
+                                        </td>
+                                        <td>{{ product.name }}</td>
+                                        <td>{{ product.category.name }}</td>
+                                        <td>
+                                            {% if product.is_on_sale() %}
+                                                <span class="text-muted text-decoration-line-through small">${{ "%.2f"|format(product.price) }}</span><br>
+                                                <span class="text-danger">${{ "%.2f"|format(product.sale_price) }}</span>
+                                            {% else %}
+                                                <span>${{ "%.2f"|format(product.price) }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if product.stock <= 5 %}
+                                                <span class="badge bg-danger">{{ product.stock }}</span>
+                                            {% elif product.stock <= 20 %}
+                                                <span class="badge bg-warning">{{ product.stock }}</span>
+                                            {% else %}
+                                                <span class="badge bg-success">{{ product.stock }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if product.is_active %}
+                                                <span class="badge bg-success">Activo</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Inactivo</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ url_for('admin.edit_product', product_id=product.id) }}" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="{{ url_for('products.product_detail', product_id=product.id) }}" class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ product.id }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            
+                                            <!-- Modal de confirmaciu00f3n de eliminaciu00f3n -->
+                                            <div class="modal fade" id="deleteModal{{ product.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ product.id }}" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="deleteModalLabel{{ product.id }}">Confirmar eliminaciu00f3n</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            u00bfEstu00e1s seguro de que deseas eliminar el producto <strong>{{ product.name }}</strong>? Esta acciu00f3n no se puede deshacer.
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                            <form action="{{ url_for('admin.delete_product', product_id=product.id) }}" method="post" class="d-inline">
+                                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Paginaciu00f3n -->
+                {% if products.pages > 1 %}
+                    <div class="card-footer bg-white">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center mb-0">
+                                {% if products.has_prev %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('admin.products', page=products.prev_num, search=request.args.get('search', ''), category=request.args.get('category', ''), sort=request.args.get('sort', '')) }}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                
+                                {% for page_num in products.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                                    {% if page_num %}
+                                        {% if products.page == page_num %}
+                                            <li class="page-item active">
+                                                <a class="page-link" href="{{ url_for('admin.products', page=page_num, search=request.args.get('search', ''), category=request.args.get('category', ''), sort=request.args.get('sort', '')) }}">{{ page_num }}</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ url_for('admin.products', page=page_num, search=request.args.get('search', ''), category=request.args.get('category', ''), sort=request.args.get('sort', '')) }}">{{ page_num }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% else %}
+                                        <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if products.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('admin.products', page=products.next_num, search=request.args.get('search', ''), category=request.args.get('category', ''), sort=request.args.get('sort', '')) }}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

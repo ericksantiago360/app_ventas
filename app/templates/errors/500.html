@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="error-template">
+                <h1 class="display-1 text-danger">500</h1>
+                <h2 class="mb-4">Error interno del servidor</h2>
+                <div class="error-details mb-4">
+                    <p>Lo sentimos, ha ocurrido un error en nuestro servidor. Estamos trabajando para solucionarlo lo antes posible.</p>
+                </div>
+                <div class="error-actions">
+                    <a href="{{ url_for('main.home') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-home me-2"></i>Volver al inicio
+                    </a>
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-outline-secondary btn-lg ms-2">
+                        <i class="fas fa-envelope me-2"></i>Contactar soporte
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">u00bfQuu00e9 puedo hacer?</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Intenta recargar la pu00e1gina</li>
+                        <li class="list-group-item">Vuelve a intentarlo mu00e1s tarde</li>
+                        <li class="list-group-item">Limpia la cachu00e9 de tu navegador</li>
+                        <li class="list-group-item">Si el problema persiste, contu00e1ctanos para obtener ayuda</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
