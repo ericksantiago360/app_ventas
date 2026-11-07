@@ -137,8 +137,10 @@
                             {% if order.payment_status %}
                                 <p><strong>Estado del pago:</strong> {{ order.payment_status|capitalize }}</p>
                             {% endif %}
-                            <p><strong>Subtotal:</strong> ${{ "%.2f"|format(order.subtotal) }}</p>
-                            <p><strong>Envío:</strong> ${{ "%.2f"|format(order.shipping_cost) }}</p>
+                            <p><strong>Subtotal antes de impuestos:</strong> ${{ "%.2f"|format(order.subtotal) }}</p>
+                            {% if order.ieps_amount %}<p><strong>IEPS:</strong> ${{ "%.2f"|format(order.ieps_amount) }}</p>{% endif %}
+                            <p><strong>IVA:</strong> ${{ "%.2f"|format(order.iva_amount) }}</p>
+                            <p><strong>Envío (incluido):</strong> ${{ "%.2f"|format(order.shipping_cost) }}</p>
                             <p><strong>Total:</strong> ${{ "%.2f"|format(order.total_amount) }}</p>
                         </div>
                     </div>
@@ -181,11 +183,19 @@
                             </tbody>
                             <tfoot class="table-light">
                                 <tr>
-                                    <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                                    <td colspan="3" class="text-end"><strong>Subtotal antes de impuestos:</strong></td>
                                     <td>${{ "%.2f"|format(order.subtotal) }}</td>
                                 </tr>
+                                {% if order.ieps_amount %}<tr>
+                                    <td colspan="3" class="text-end"><strong>IEPS:</strong></td>
+                                    <td>${{ "%.2f"|format(order.ieps_amount) }}</td>
+                                </tr>{% endif %}
                                 <tr>
-                                    <td colspan="3" class="text-end"><strong>Envío:</strong></td>
+                                    <td colspan="3" class="text-end"><strong>IVA:</strong></td>
+                                    <td>${{ "%.2f"|format(order.iva_amount) }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Envío (incluido):</strong></td>
                                     <td>${{ "%.2f"|format(order.shipping_cost) }}</td>
                                 </tr>
                                 <tr>

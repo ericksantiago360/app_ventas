@@ -38,7 +38,16 @@ def create_app(config_class=Config):
     # Crear base de datos si no existe
     with app.app_context():
         db.create_all()
+        from app.schema import add_missing_columns
+        add_missing_columns(db)
         from app.models.seed import seed_database
         seed_database()
+    
+    @app.cli.command('seed')
+    def seed_command():
+        """Carga los datos de ejemplo (no duplica los que ya existen)."""
+        from app.models.seed import seed_database
+        seed_database()
+        print('Seed listo')
     
     return app
