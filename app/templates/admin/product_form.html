@@ -101,6 +101,28 @@
                                             </div>
                                         </div>
                                         
+                                        <h6 class="mt-4">Datos fiscales</h6>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                {{ form.tax_profile.label(class="form-label") }}
+                                                {{ form.tax_profile(class="form-select") }}
+                                                <div class="form-text">El precio se captura con impuestos incluidos; el sistema desglosa base, IEPS e IVA.</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                {{ form.ieps_units.label(class="form-label") }}
+                                                {{ form.ieps_units(class="form-control" + (" is-invalid" if form.ieps_units.errors else "")) }}
+                                                <div class="form-text">Sólo para IEPS por cuota: refrescos (litros) y cigarros (piezas).</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                {{ form.sat_product_key.label(class="form-label") }}
+                                                {{ form.sat_product_key(class="form-control" + (" is-invalid" if form.sat_product_key.errors else "")) }}
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                {{ form.sat_unit_key.label(class="form-label") }}
+                                                {{ form.sat_unit_key(class="form-control" + (" is-invalid" if form.sat_unit_key.errors else "")) }}
+                                            </div>
+                                        </div>
+                                        
                                         <div class="mb-3">
                                             {{ form.category_id.label(class="form-label") }}
                                             {% if form.category_id.errors %}

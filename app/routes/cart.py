@@ -1,12 +1,25 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, session
+from decimal import Decimal
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, session, abort, current_app
 from app.models.product import Product
 from app.models.order import CartItem, Order, OrderItem
 from app.models.user import Address
 from app.forms import CheckoutForm
 from flask_login import current_user, login_required
 from app import db
+from app.taxes import breakdown_order
 
 cart = Blueprint('cart', __name__)
+
+
+def calculate_taxes(pairs):
+    """pairs: lista de (producto, cantidad). Regresa el desglose con envío."""
+    cfg = current_app.config
+    products_total = sum(Decimal(str(p.current_price())) * q for p, q in pairs)
+    shipping = 0 if products_total >= Decimal(str(cfg['FREE_SHIPPING_MIN'])) else cfg['SHIPPING_COST']
+    if not pairs:
+        shipping = 0
+    return breakdown_order(pairs, shipping_cost=shipping,
+                           frontera=cfg.get('IVA_REGION_FRONTERIZA', False))
 
 @cart.route('/cart')
 def view_cart():
@@ -27,7 +40,13 @@ def view_cart():
                     cart_items.append({'product': product, 'quantity': quantity})
                     total += product.current_price() * quantity
     
-    return render_template('cart.html', title='Carrito de Compras', cart_items=cart_items, total=total)
+    if current_user.is_authenticated:
+        pairs = [(item.product, item.quantity) for item in cart_items]
+    else:
+        pairs = [(item['product'], item['quantity']) for item in cart_items]
+    taxes = calculate_taxes(pairs)
+    
+    return render_template('cart.html', title='Carrito de Compras', cart_items=cart_items, total=total, taxes=taxes)
 
 @cart.route('/cart/add/<int:product_id>', methods=['POST'])
 def add_to_cart(product_id):
@@ -110,8 +129,9 @@ def checkout():
         flash('Tu carrito estu00e1 vacu00edo', 'info')
         return redirect(url_for('cart.view_cart'))
     
-    # Calcular total
+    # Calcular total y desglose de impuestos
     total = sum(item.product.current_price() * item.quantity for item in cart_items)
+    taxes = calculate_taxes([(item.product, item.quantity) for item in cart_items])
     
     # Obtener direcciones del usuario para el formulario
     addresses = Address.query.filter_by(user_id=current_user.id).all()
@@ -133,7 +153,11 @@ def checkout():
         # Crear orden
         order = Order(
             user_id=current_user.id,
-            total_amount=total,
+            total_amount=float(taxes.total),
+            subtotal=float(taxes.subtotal),
+            ieps_amount=float(taxes.ieps),
+            iva_amount=float(taxes.iva),
+            shipping_cost=float(taxes.shipping_total),
             shipping_address=address_str,
             payment_method=form.payment_method.data
         )
@@ -141,12 +165,17 @@ def checkout():
         db.session.flush()  # Para obtener el ID de la orden
         
         # Crear items de la orden
-        for cart_item in cart_items:
+        for cart_item, line in zip(cart_items, taxes.lines):
             order_item = OrderItem(
                 order_id=order.id,
                 product_id=cart_item.product_id,
                 quantity=cart_item.quantity,
-                price=cart_item.product.current_price()
+                price=cart_item.product.current_price(),
+                tax_profile=line.profile,
+                base_amount=float(line.base),
+                ieps_amount=float(line.ieps),
+                iva_amount=float(line.iva),
+                iva_rate=float(line.iva_rate)
             )
             db.session.add(order_item)
             
@@ -161,7 +190,7 @@ def checkout():
         flash('u00a1Pedido realizado con u00e9xito!', 'success')
         return redirect(url_for('cart.order_confirmation', order_id=order.id))
     
-    return render_template('checkout.html', title='Finalizar Compra', form=form, cart_items=cart_items, total=total)
+    return render_template('checkout.html', title='Finalizar Compra', form=form, cart_items=cart_items, total=total, taxes=taxes)
 
 @cart.route('/order/confirmation/<int:order_id>')
 @login_required

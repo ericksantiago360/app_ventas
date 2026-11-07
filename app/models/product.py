@@ -28,6 +28,11 @@ class Product(db.Model):
     brand = db.Column(db.String(50), nullable=True)
     sku = db.Column(db.String(20), unique=True, nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    # Datos fiscales (ver app/taxes.py)
+    tax_profile = db.Column(db.String(30), nullable=False, default='general')
+    ieps_units = db.Column(db.Float, nullable=True)  # litros por pieza o cigarros por cajetilla
+    sat_product_key = db.Column(db.String(8), nullable=True)  # c_ClaveProdServ
+    sat_unit_key = db.Column(db.String(3), nullable=True, default='H87')  # c_ClaveUnidad
     
     # Relaciones
     order_items = db.relationship('OrderItem', backref='product', lazy=True)
@@ -44,6 +49,11 @@ class Product(db.Model):
         if self.is_on_sale():
             return int(((self.price - self.sale_price) / self.price) * 100)
         return 0
+    
+    def tax_breakdown(self, quantity=1, frontera=False):
+        from app.taxes import breakdown_line
+        return breakdown_line(self.current_price(), quantity, self.tax_profile,
+                              self.ieps_units, frontera=frontera)
     
     def __repr__(self):
         return f"Product('{self.name}', ${self.price})"

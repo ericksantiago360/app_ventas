@@ -72,7 +72,11 @@ def new_product():
             stock=form.stock.data,
             brand=form.brand.data,
             sku=form.sku.data,
-            category_id=form.category_id.data
+            category_id=form.category_id.data,
+            tax_profile=form.tax_profile.data,
+            ieps_units=form.ieps_units.data,
+            sat_product_key=form.sat_product_key.data or None,
+            sat_unit_key=form.sat_unit_key.data or None
         )
         
         if form.image.data:
@@ -84,7 +88,7 @@ def new_product():
         flash('¡Producto creado exitosamente!', 'success')
         return redirect(url_for('admin.admin_products'))
     
-    return render_template('admin/create_product.html', 
+    return render_template('admin/product_form.html', 
                            title='Nuevo Producto', 
                            form=form, 
                            legend='Nuevo Producto')
@@ -109,6 +113,10 @@ def update_product(product_id):
         product.brand = form.brand.data
         product.sku = form.sku.data
         product.category_id = form.category_id.data
+        product.tax_profile = form.tax_profile.data
+        product.ieps_units = form.ieps_units.data
+        product.sat_product_key = form.sat_product_key.data or None
+        product.sat_unit_key = form.sat_unit_key.data or None
         
         if form.image.data:
             image_file = save_picture(form.image.data, 'products')
@@ -126,10 +134,15 @@ def update_product(product_id):
         form.brand.data = product.brand
         form.sku.data = product.sku
         form.category_id.data = product.category_id
+        form.tax_profile.data = product.tax_profile
+        form.ieps_units.data = product.ieps_units
+        form.sat_product_key.data = product.sat_product_key
+        form.sat_unit_key.data = product.sat_unit_key
     
-    return render_template('admin/create_product.html', 
+    return render_template('admin/product_form.html', 
                            title='Actualizar Producto', 
                            form=form, 
+                           product=product,
                            legend='Actualizar Producto')
 
 @admin.route('/admin/product/<int:product_id>/delete', methods=['POST'])

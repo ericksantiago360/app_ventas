@@ -38,6 +38,8 @@ def create_app(config_class=Config):
     # Crear base de datos si no existe
     with app.app_context():
         db.create_all()
+        from app.schema import add_missing_columns
+        add_missing_columns(db)
         from app.models.seed import seed_database
         seed_database()
     

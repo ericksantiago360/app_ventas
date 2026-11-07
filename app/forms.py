@@ -4,6 +4,8 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextA
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from app.models.user import User
 from flask_login import current_user
+from wtforms.validators import Optional
+from app.taxes import profile_choices
 
 class RegistrationForm(FlaskForm):
     username = StringField('Nombre de Usuario', validators=[DataRequired(), Length(min=2, max=20)])
@@ -63,6 +65,10 @@ class ProductForm(FlaskForm):
     brand = StringField('Marca')
     sku = StringField('SKU')
     category_id = SelectField('Categoría', coerce=int, validators=[DataRequired()])
+    tax_profile = SelectField('Perfil fiscal (IVA / IEPS)', choices=profile_choices(), default='general')
+    ieps_units = FloatField('Litros por pieza o cigarros por cajetilla', validators=[Optional(), NumberRange(min=0)])
+    sat_product_key = StringField('Clave SAT de producto (c_ClaveProdServ)', validators=[Optional(), Length(min=8, max=8)])
+    sat_unit_key = StringField('Clave SAT de unidad (c_ClaveUnidad)', default='H87', validators=[Optional(), Length(max=3)])
     image = FileField('Imagen del Producto', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField('Guardar Producto')
 
