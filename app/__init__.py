@@ -43,4 +43,11 @@ def create_app(config_class=Config):
         from app.models.seed import seed_database
         seed_database()
     
+    @app.cli.command('seed')
+    def seed_command():
+        """Carga los datos de ejemplo (no duplica los que ya existen)."""
+        from app.models.seed import seed_database
+        seed_database()
+        print('Seed listo')
+    
     return app

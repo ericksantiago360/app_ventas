@@ -59,3 +59,19 @@ class CheckoutTaxesTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class ConvenienceSeedTest(CheckoutTaxesTest):
+    def test_seed_es_idempotente_y_cubre_perfiles(self):
+        from app.models.seed import seed_convenience_store, CONVENIENCE_PRODUCTS
+        from app.models.product import Product
+        from app.taxes import TAX_PROFILES
+        self.assertEqual(seed_convenience_store(), 0)  # create_app ya lo corrió
+        skus = [p[0] for p in CONVENIENCE_PRODUCTS]
+        products = Product.query.filter(Product.sku.in_(skus)).all()
+        self.assertEqual(len(products), len(skus))
+        used = {p.tax_profile for p in products}
+        self.assertTrue(used <= set(TAX_PROFILES))
+        for product in products:
+            line = product.tax_breakdown(2)
+            self.assertEqual(line.base + line.ieps + line.iva, line.total)

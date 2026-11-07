@@ -51,4 +51,5 @@ base, IEPS e IVA para el carrito, el checkout y los pedidos.
 - Para IEPS por cuota se captura `ieps_units`: litros por pieza o cigarros por cajetilla.
 - `IVA_REGION_FRONTERIZA=1` en `.env` aplica el IVA de 8% de región fronteriza.
 - Las tasas y cuotas 2026 están en `TAX_PROFILES`; hay que revisarlas cada año.
+- Datos de ejemplo: `flask --app run.py seed` agrega 19 productos de tienda de conveniencia, uno por cada perfil fiscal, sin duplicar los existentes.
 - Pruebas: `python -m unittest discover -s tests -t .`
